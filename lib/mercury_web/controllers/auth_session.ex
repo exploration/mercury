@@ -37,6 +37,8 @@ defmodule MercuryWeb.AuthSession do
 
   @doc "Logging out drops the entire session"
   def logout(conn) do
-    configure_session(conn, drop: true)
+    conn
+    |> assign(:account, nil)
+    |> delete_session(:account)
   end
 end

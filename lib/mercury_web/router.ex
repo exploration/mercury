@@ -19,6 +19,7 @@ defmodule MercuryWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/logout", PageController, :delete
     live "/batches", BatchLive.Index, :index
 
     get "/auth/google/callback", GoogleAuthController, :index

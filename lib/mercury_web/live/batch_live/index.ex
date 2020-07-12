@@ -5,7 +5,7 @@ defmodule MercuryWeb.BatchLive.Index do
   @impl true
   def mount(_params, session, socket) do
     if AuthSession.logged_in_session?(session) do
-      {:ok, socket}
+      {:ok, assign(socket, account: session["account"])}
     else
       {:ok, redirect(socket, to: Routes.page_path(socket, :index))}
     end

@@ -13,4 +13,13 @@ defmodule MercuryWeb.PageController do
       render(conn, "index.html", [oauth_google_url: oauth_google_url])
     end
   end
+
+  @doc """
+  Log out
+  """
+  def delete(conn, _params) do
+    conn
+    |> AuthSession.logout()
+    |> redirect(to: Routes.page_path(conn, :index))
+  end
 end
