@@ -24,7 +24,8 @@ defmodule MercuryWeb.AuthSession do
 
   @doc "Test login, given a session map (like in a liveview)"
   def logged_in_session?(session) do
-    %Mercury.Account{email: _email} = Map.get(session, :account, %Account{})
+    Map.get(session, "account", %Account{})
+    |> Map.get(:email) != nil
   end
 
   @doc "Login adds an account to the session storage"

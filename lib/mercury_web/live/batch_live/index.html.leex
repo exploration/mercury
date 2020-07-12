@@ -1,6 +1,7 @@
 <%= f = form_for :data, "#", 
   phx_submit: "parse_data",
-  phx_auto_recover: "recover"
+  phx_auto_recover: "recover",
+  id: "tsv-data"
 %>
 <%= if @state == "new" do %>
   <%= label :data, :tsv, "1. Paste your spreadsheet text (CSV with header rows) here:", class: xc("label") %>

@@ -32,7 +32,7 @@ defmodule Mercury.TestFixtures do
     account = account()
     conn = 
       Plug.Conn.assign(conn, :account, account)
-      |> Plug.Test.init_test_session(%{account: account})
+      |> Plug.Test.init_test_session(%{"account" => account})
     {:ok, conn: conn, account: account}
   end
 end
