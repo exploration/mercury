@@ -1,8 +1,26 @@
 defmodule Mercury.TestFixtures do
-  @doc "a valid %Mercury.Account{}"
+  @doc """
+  Returns a valid %Mercury.Account{}. `attrs` can be passed as a map.
+  """
   def account(attrs \\ %{}) do
     attrs
-    |> Enum.into(%{
+    |> Enum.into(account_attrs())
+    |> Mercury.Account.from_google_profile()
+  end
+
+  @doc """
+  Map attributes for a valid %Mercury.Account{}. This is basically a Google Profile.
+
+  ## Examples
+  
+      iex> account_attrs()
+      %{...}
+
+      iex> %{account_attrs() | email: "ellery@merand.org"}
+      %{email: "ellery@merand.org", ...}
+  """
+  def account_attrs() do
+    %{
       email: "dmerand@explo.org",
       email_verified: true,
       family_name: "Merand",
@@ -13,10 +31,8 @@ defmodule Mercury.TestFixtures do
       picture: "https://lh3.googleusercontent.com/a-/AOh14Ghgy8pFmrNErrBfqvg82xRuMim0_46P1M4TtY7GGg",
       profile: "https://plus.google.com/117575961915318464047",
       sub: "117575961915318464047"
-    })
-    |> Mercury.Account.from_google_profile()
+    }
   end
-
 
   @doc """
   Run this in a test setup block to log in.
