@@ -3,7 +3,7 @@
   phx_auto_recover: "recover",
   id: "tsv-data"
 %>
-<%= if @state.phase == "new" do %>
+<%= if State.at_phase @state, "new" do %>
   <%= label f, :table_data, "1. Copy/paste from your spreadsheet selection here:", class: xc("label") %>
   <div class="mt2">
     <%= textarea f, :table_data, value: @state.batch.table_data, class: xc("textarea") <> " w-100 mw9 f6" %>
@@ -13,10 +13,10 @@
   </div>
 <% end %>
 
-<%= if @state.phase != "new" do %>
+<%= if State.up_to_phase @state, "parsed" do %>
   <div class="flex justify-between">
     <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") %>
-    <%= link "👆 edit data", to: "#", class: xc("link"), phx_value_phase: "new", phx_click: "set_phase" %>
+    <%= link "👆 edit data", to: "#", class: xc("link"), phx_value_phase: "new", phx_click: "override_phase" %>
   </div>
   <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
     <table class="w-100 mw9 table collapse">

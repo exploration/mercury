@@ -31,9 +31,18 @@ defmodule MercuryWeb.BatchLive.Index do
     {:noreply, update_table_data(socket, table_data)}
   end
 
-  def handle_event("set_phase", %{"phase" => phase}, socket) do
+  def handle_event("override_phase", %{"phase" => phase}, socket) do
     state = %{socket.assigns.state | phase: phase}
     {:noreply, assign(socket, state: state)}
+  end
+
+  defp assign_phase(state) do
+    case state do
+      %{batch: %Batch{table_data: ""}} ->
+        %{state| phase: "new"}
+      _ -> 
+        %{state| phase: "parsed"}
+    end
   end
 
   defp update_table_data(socket, table_data) do
@@ -41,8 +50,8 @@ defmodule MercuryWeb.BatchLive.Index do
       batch: %{socket.assigns.state.batch | table_data: table_data},
       changeset: Batch.changeset(socket.assigns.state.batch, %{table_data: table_data}),
       table: Table.from_tsv(table_data),
-      phase: "parsed"
     }
+    |> assign_phase()
     assign(socket, state: state)
   end
 end
