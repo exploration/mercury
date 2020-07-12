@@ -10,10 +10,20 @@ defmodule Mercury.TableTest do
     assert %Row{fields: ["donald", "neat"]} = row
   end
 
-  test "data parsing" do
-    data = Table.from_tsv @raw_data
-    assert %Table{field_count: 3} = data
-    assert %Table{header: %Row{fields: ["First Name", "Last Name", "Email"]}} = data
-    assert %Table{rows: [%Row{fields: ["Donald", "Merand", "dmerand@explo.org"]}, %Row{fields: ["Eric", "Edwards", "eedwards@explo.org"]}, %Row{fields: ["Sam", "Osborn", "sosborn@explo.org"]}]} = data
+  test "table parsing" do
+    table = Table.from_tsv @raw_data
+    assert %Table{field_count: 3} = table
+    assert %Table{header: %Row{fields: ["First Name", "Last Name", "Email"]}} = table
+    assert %Table{rows: [%Row{fields: ["Donald", "Merand", "dmerand@explo.org"]}, %Row{fields: ["Eric", "Edwards", "eedwards@explo.org"]}, %Row{fields: ["Sam", "Osborn", "sosborn@explo.org"]}]} = table
+  end
+
+  test "data retrieval" do
+    table = Table.from_tsv @raw_data
+    assert "Donald" == Table.get_field(table, 0, "First Name")
+    assert "Sam" == Table.get_field(table, 2, "First Name")
+    assert "eedwards@explo.org" == Table.get_field(table, 1, "Email")
+
+    assert "" == Table.get_field(table, 100, "First Name")
+    assert "" == Table.get_field(table, 0, "Crap Weasel")
   end
 end

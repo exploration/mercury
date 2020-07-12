@@ -23,6 +23,26 @@ defmodule MercuryWeb.BatchLive.Index do
   end
 
   @impl true
+  def handle_event("decrement_selected_row", _params, socket) do
+    state = socket.assigns.state
+    cond do
+      state.selected_row == 0 ->
+        {:noreply, socket}
+      true ->
+        {:noreply, assign(socket, :state, %{state | selected_row: state.selected_row - 1})}
+    end
+  end
+
+  def handle_event("increment_selected_row", _params, socket) do
+    state = socket.assigns.state
+    cond do
+      state.selected_row == Enum.count(state.table.rows) - 1 ->
+        {:noreply, socket}
+      true ->
+        {:noreply, assign(socket, :state, %{state | selected_row: state.selected_row + 1})}
+    end
+  end
+
   def handle_event("recover", %{"batch" => %{"table_data" => table_data}}, socket) do
     {:noreply, update_table_data(socket, table_data)}
   end
@@ -34,6 +54,13 @@ defmodule MercuryWeb.BatchLive.Index do
   def handle_event("override_phase", %{"phase" => phase}, socket) do
     state = %{socket.assigns.state | phase: phase}
     {:noreply, assign(socket, state: state)}
+  end
+
+  def handle_event("validate_batch", %{"batch" => params}, socket) do
+    state = %{socket.assigns.state |
+      changeset: Batch.changeset(socket.assigns.state.batch, params)
+    }
+    {:noreply, assign(socket, :state, state)}
   end
 
   defp assign_phase(state) do

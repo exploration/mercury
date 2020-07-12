@@ -3,6 +3,9 @@ defmodule Mercury.Table do
 
   defstruct field_count: 0, header: %Row{}, rows: []
 
+  @doc """
+  Given a valid TSV, convert it into a %Table{}
+  """
   def from_tsv(tsv) do
     [header | rows] = 
       tsv
@@ -14,5 +17,29 @@ defmodule Mercury.Table do
       header: header,
       rows: rows
     }
+  end
+
+  @doc """
+  Given a table, row number, and field name, return the matching row/field. If no field is found, return an empty string.
+
+  ## Examples
+  
+      iex> get_field(table, 2, "First Name")
+      "Donald"
+  """
+  def get_field(%__MODULE__{} = table, row_number, field_name) do
+    field_index = Enum.find_index(table.header.fields, fn field -> field == field_name end)
+
+    cond do
+      row_number > table.field_count ->
+        ""
+      field_index == nil ->
+        ""
+      true ->
+        table.rows
+        |> Enum.at(row_number)
+        |> Map.get(:fields, [])
+        |> Enum.at(field_index)
+    end
   end
 end

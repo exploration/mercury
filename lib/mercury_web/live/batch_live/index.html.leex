@@ -1,14 +1,13 @@
-<%= f = form_for @state.changeset, "#", 
-  phx_submit: "parse_data",
-  phx_auto_recover: "recover",
-  id: "tsv-data"
-%>
 <%= if State.at_phase @state, "new" do %>
+  <%= f = form_for @state.changeset, "#", 
+    phx_submit: "parse_data",
+    phx_auto_recover: "recover"
+  %>
   <%= label f, :table_data, "1. Copy/paste from your spreadsheet selection here:", class: xc("label") %>
   <div class="mt2">
     <%= textarea f, :table_data, value: @state.batch.table_data, class: xc("textarea") <> " w-100 mw9 f6" %>
   </div>
-  <div class="mt2 mb4">
+  <div class="mt3">
     <%= submit "save", class: xc("btn-s") %>
   </div>
 <% end %>
@@ -23,7 +22,7 @@
       <thead>
         <tr class="fw7 tl bb x-b--blue">
           <%= for field <- @state.table.header.fields do %>
-            <th class="pa2 br x-b--blue"><%= field %></th>
+            <th class="pa2 br x-b--blue">&lt;&lt;<%= field %>&gt;&gt;</th>
           <% end %>
         </tr>
       </thead>
@@ -37,5 +36,81 @@
         <% end %>
       </tbody>
     </table>
+  </div>
+
+  <%= content_tag :div, "3. Your email template:", class: xc("label") <> " mt4" %>
+  <div class="mt2 flex justify-between">
+    <div>
+      <%= link "<<", to: "#", phx_click: "decrement_selected_row", class: xc("btn-s", replace: [{"ph4 ph5-ns", "ph2"}]) %>
+    </div>
+    <div class="mt2 consolas">
+      <%= inspect Enum.at(@state.table.rows, @state.selected_row).fields %>
+    </div>
+    <div>
+      <%= link ">>", to: "#", phx_click: "increment_selected_row", class: xc("btn-s", replace: [{"ph4 ph5-ns", "ph2"}]) %>
+    </div>
+  </div>
+
+  <%= f = form_for @state.changeset, "#", 
+    phx_change: "validate_batch",
+    phx_submit: "send_batch"
+  %>
+  <div class="mt3 flex-ns">
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= label f, :from, "FROM", class: xc("label") %>
+      <div class="mt2">
+        <%= text_input f, :from, class: xc("input-text") %>
+      </div>
+    </div>
+    <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+      <%= State.merge(@state, :from) %>
+    </div>
+  </div>
+  <div class="mt4 flex-ns">
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= label f, :to, "TO", class: xc("label") %>
+      <div class="mt2">
+        <%= text_input f, :to, class: xc("input-text") %>
+      </div>
+    </div>
+    <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+      <%= State.merge(@state, :to) %>
+    </div>
+  </div>
+  <div class="mt4 flex-ns">
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= label f, :cc, "CC", class: xc("label") %>
+      <div class="mt2">
+        <%= text_input f, :cc, class: xc("input-text") %>
+      </div>
+    </div>
+    <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+      <%= State.merge(@state, :cc) %>
+    </div>
+  </div>
+  <div class="mt4 flex-ns">
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= label f, :subject, "SUBJECT", class: xc("label") %>
+      <div class="mt2">
+        <%= text_input f, :subject, class: xc("input-text") %>
+      </div>
+    </div>
+    <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+      <%= State.merge(@state, :subject) %>
+    </div>
+  </div>
+  <div class="mt4 flex-ns">
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= label f, :body, "BODY", class: xc("label") %>
+      <div class="mt2">
+        <%= textarea f, :body, class: xc("textarea") %>
+      </div>
+    </div>
+    <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+      <%= State.merge(@state, :body) %>
+    </div>
+  </div>
+  <div class="mt4">
+    <%= submit "send batch", class: xc("btn") %>
   </div>
 <% end %>
