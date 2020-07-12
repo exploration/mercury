@@ -1,1 +1,32 @@
-testing wat wat
+<%= f = form_for :data, "#", 
+  phx_change: "parse_data",
+  phx_auto_recover: "recover"
+%>
+<%= label :data, :tsv, "1. Paste your spreadsheet text (CSV with header rows) here:", class: xc("label") %>
+<div class="mt2">
+  <%= textarea f, :tsv, class: xc("textarea") <> " w-100 mw9 f6" %>
+</div>
+
+<%= if @table.field_count > 0 do %>
+  <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") <> " mt4" %>
+  <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
+    <table class="w-100 mw9 table collapse">
+      <thead>
+        <tr class="fw7 tl bb x-b--blue">
+          <%= for field <- @table.header.fields do %>
+            <th class="pa2 br x-b--blue"><%= field %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for row <- @table.rows do %>
+          <tr class="striped--near-white">
+            <%= for field <- row.fields do %>
+              <td class="pa2 br x-b--blue"><%= field %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

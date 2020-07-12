@@ -1,4 +1,4 @@
-<header role="header" class="flex pa2">
+<header role="header" class="flex pa2 pa4-ns">
   <div class="mr2">
     <%= img_tag @account.picture, class: "br-100", width: 25, height: 25 %>
   </div>
@@ -10,7 +10,7 @@
   </div>
   
 </header>
-<main role="main" class="mt4 mw7-ns center">
+<main role="main" class="pa2 ph4-ns pb4-ns">
   <p class="alert alert-info" role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="info"><%= live_flash(@flash, :info) %></p>
