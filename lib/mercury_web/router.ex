@@ -8,6 +8,7 @@ defmodule MercuryWeb.Router do
     plug :put_root_layout, {MercuryWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug MercuryWeb.AuthSession
   end
 
   pipeline :api do

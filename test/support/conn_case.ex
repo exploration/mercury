@@ -23,6 +23,7 @@ defmodule MercuryWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import MercuryWeb.ConnCase
+      import Mercury.TestFixtures
 
       alias MercuryWeb.Router.Helpers, as: Routes
 

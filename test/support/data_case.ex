@@ -24,6 +24,7 @@ defmodule Mercury.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Mercury.DataCase
+      import Mercury.TestFixtures
     end
   end
 
