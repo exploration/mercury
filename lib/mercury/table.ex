@@ -1,7 +1,7 @@
 defmodule Mercury.Table do
   alias Mercury.Row
 
-  defstruct field_count: 0, header: %Row{}, rows: []
+  defstruct field_count: 0, header: %Row{}, rows: [], row_count: 0
 
   @doc """
   Given a valid TSV, convert it into a %Table{}
@@ -15,7 +15,8 @@ defmodule Mercury.Table do
     %__MODULE__{
       field_count: Enum.count(header.fields),
       header: header,
-      rows: rows
+      rows: rows,
+      row_count: Enum.count(rows)
     }
   end
 
@@ -31,7 +32,7 @@ defmodule Mercury.Table do
     field_index = Enum.find_index(table.header.fields, fn field -> field == field_name end)
 
     cond do
-      row_number > table.field_count ->
+      row_number > table.row_count ->
         ""
       field_index == nil ->
         ""

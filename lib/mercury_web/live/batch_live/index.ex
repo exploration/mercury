@@ -36,7 +36,7 @@ defmodule MercuryWeb.BatchLive.Index do
   def handle_event("increment_selected_row", _params, socket) do
     state = socket.assigns.state
     cond do
-      state.selected_row == Enum.count(state.table.rows) - 1 ->
+      state.selected_row == state.table.row_count - 1 ->
         {:noreply, socket}
       true ->
         {:noreply, assign(socket, :state, %{state | selected_row: state.selected_row + 1})}

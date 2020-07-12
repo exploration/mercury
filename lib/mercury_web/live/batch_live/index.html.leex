@@ -23,13 +23,13 @@
         <tr class="fw7 tl bb x-b--blue">
           <th class="w2 br x-b--blue tc">#</th>
           <%= for field <- @state.table.header.fields do %>
-            <th class="pa2 br x-b--blue">&lt;&lt;<%= field %>&gt;&gt;</th>
+            <th class="pa2 br x-b--blue">{{<%= field %>}}</th>
           <% end %>
         </tr>
       </thead>
       <tbody>
         <%= for {row, index} <- Enum.with_index(@state.table.rows) do %>
-          <tr class="<%= if @state.selected_row == index do "fw7 x-bg-lightorange" else "striped--near-white" end %> pointer" phx-value-row="<%= index %>" phx-click="select_row">
+          <tr class="<%= if @state.selected_row == index do "x-bg-lightorange" else "striped--near-white" end %> pointer" phx-value-row="<%= index %>" phx-click="select_row">
             <td class="w2 tc br x-b--blue">
               <%= if @state.selected_row == index do %>
                 👉

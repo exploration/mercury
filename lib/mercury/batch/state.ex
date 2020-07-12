@@ -11,7 +11,7 @@ defmodule Mercury.Batch.State do
     table: %Table{}
   ]
   
-  @field_regex ~r/<<([a-zA-Z0-9 -_]+)>>/
+  @field_regex ~r/{{([a-zA-Z0-9 -_]+)}}/
 
   @doc """
   Returns `true` if the state is precisely at the specified phase
