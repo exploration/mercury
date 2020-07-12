@@ -16,6 +16,11 @@ defmodule MercuryWeb.AuthSession do
     end
   end
 
+  @doc "Test login"
+  def logged_in?(conn) do
+    %Mercury.Account{} = Map.get(conn.assigns, :account)
+  end
+
   @doc "Login adds an account to the session storage"
   def login(conn, account) do 
     conn
