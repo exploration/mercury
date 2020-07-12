@@ -9,9 +9,9 @@ defmodule MercuryWeb.ErrorHelpers do
   Generates tag for inlined form input errors.
   """
   def error_tag(form, field) do
-    Enum.map(Keyword.get_values(form.errors, field), fn error ->
-      content_tag(:span, translate_error(error),
-        class: "invalid-feedback",
+    Enum.map(Keyword.get_values(form.source.errors, field), fn error ->
+      content_tag(:div, translate_error(error),
+        class: "invalid-feedback mt1 f6",
         phx_feedback_for: input_id(form, field)
       )
     end)

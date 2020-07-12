@@ -5,7 +5,7 @@ defmodule Mercury.Batch.State do
   defstruct [
     account: %Account{}, 
     batch: %Batch{},
-    changeset: Batch.changeset(%Batch{}, %{}),
+    changeset: Batch.change(%Batch{}, %{}),
     phase: "new",
     selected_row: 0,
     table: %Table{}

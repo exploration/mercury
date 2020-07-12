@@ -16,9 +16,13 @@ defmodule Mercury.Batch.Batch do
   end
 
   @doc false
-  def changeset(batch, attrs) do
+  def change(batch, attrs) do
     batch
     |> cast(attrs, [:table_data, :creator, :send_report, :from, :to, :cc, :subject, :body])
+  end
+
+  def validate(changeset) do
+    changeset
     |> validate_required([:table_data, :creator, :send_report, :from, :to, :subject, :body])
   end
 end

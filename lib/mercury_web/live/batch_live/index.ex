@@ -1,11 +1,6 @@
 defmodule MercuryWeb.BatchLive.Index do
   @moduledoc """
-  This is basically the application. It runs as a state machine.
-
-  Valid view states are:
-
-  1. `"new"` - No data have been entered - only show the "upload data" dialog.
-  2. `"parsed"` - Data have been successfully uploaded and parsed. Data dialog is hidden, form options are shown.
+  This is basically the application. It runs as a state machine. See `MercuryWeb.Batch.State` for more details.
   """
 
   use MercuryWeb, :live_view
@@ -15,7 +10,8 @@ defmodule MercuryWeb.BatchLive.Index do
   @impl true
   def mount(_params, session, socket) do
     if AuthSession.logged_in_session?(session) do
-      state = %State{account: session["account"]}
+      batch = %Batch{creator: session["account"]}
+      state = %State{account: session["account"], batch: batch}
       {:ok, assign(socket, state: state)}
     else
       {:ok, redirect(socket, to: Routes.page_path(socket, :index))}
@@ -61,9 +57,20 @@ defmodule MercuryWeb.BatchLive.Index do
     {:noreply, assign(socket, :state, %{state | selected_row: String.to_integer(row)})}
   end
 
+  def handle_event("send_batch", %{"batch" => params}, socket) do
+    state = %{socket.assigns.state |
+      changeset: 
+        Batch.change(socket.assigns.state.batch, params) 
+        |> Batch.validate()
+    }
+    {:noreply, assign(socket, :state, state)}
+  end
+
   def handle_event("validate_batch", %{"batch" => params}, socket) do
     state = %{socket.assigns.state |
-      changeset: Batch.changeset(socket.assigns.state.batch, params)
+      changeset: 
+        Batch.change(socket.assigns.state.batch, params) 
+        |> Batch.validate()
     }
     {:noreply, assign(socket, :state, state)}
   end
@@ -80,7 +87,6 @@ defmodule MercuryWeb.BatchLive.Index do
   defp update_table_data(socket, table_data) do
     state = %{socket.assigns.state |
       batch: %{socket.assigns.state.batch | table_data: table_data},
-      changeset: Batch.changeset(socket.assigns.state.batch, %{table_data: table_data}),
       table: Table.from_tsv(table_data),
     }
     |> assign_phase()

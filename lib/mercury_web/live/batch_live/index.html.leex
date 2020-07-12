@@ -48,8 +48,8 @@
     </table>
   </div>
 
-  <%= content_tag :div, "3. Your email template:", class: xc("label") <> " mt4" %>
-  <div class="mt2 flex justify-between">
+  <%= content_tag :div, "3. Your email template:", class: xc("label") <> " mt5" %>
+  <div class="mt3 flex justify-between">
     <div>
       <%= link "<<", to: "#", phx_click: "decrement_selected_row", class: xc("btn-s", replace: [{"ph4 ph5-ns", "ph2"}]) %>
     </div>
@@ -65,12 +65,14 @@
     phx_change: "validate_batch",
     phx_submit: "send_batch"
   %>
-  <div class="mt3 flex-ns">
+  <%= hidden_input f, :table_data, value: @state.batch.table_data %>
+  <div class="mt4 flex-ns">
     <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
       <%= label f, :from, "FROM", class: xc("label") %>
       <div class="mt2">
         <%= text_input f, :from, class: xc("input-text") %>
       </div>
+        <%= error_tag f, :from %>
     </div>
     <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
       <%= State.merge(@state, :from) %>
@@ -81,6 +83,7 @@
       <%= label f, :to, "TO", class: xc("label") %>
       <div class="mt2">
         <%= text_input f, :to, class: xc("input-text") %>
+        <%= error_tag f, :to %>
       </div>
     </div>
     <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
@@ -92,6 +95,7 @@
       <%= label f, :cc, "CC", class: xc("label") %>
       <div class="mt2">
         <%= text_input f, :cc, class: xc("input-text") %>
+        <%= error_tag f, :cc %>
       </div>
     </div>
     <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
@@ -103,6 +107,7 @@
       <%= label f, :subject, "SUBJECT", class: xc("label") %>
       <div class="mt2">
         <%= text_input f, :subject, class: xc("input-text") %>
+        <%= error_tag f, :subject %>
       </div>
     </div>
     <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
@@ -114,6 +119,7 @@
       <%= label f, :body, "BODY", class: xc("label") %>
       <div class="mt2">
         <%= textarea f, :body, class: xc("textarea") %>
+        <%= error_tag f, :body %>
       </div>
     </div>
     <pre class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns x-tahoma">
