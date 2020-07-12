@@ -9,30 +9,40 @@ defmodule MercuryWeb.BatchLive.Index do
   """
 
   use MercuryWeb, :live_view
-  alias Mercury.Table
+  alias Mercury.{Batch.Batch, Batch.State, Table}
   alias MercuryWeb.AuthSession
 
   @impl true
   def mount(_params, session, socket) do
     if AuthSession.logged_in_session?(session) do
-      {:ok, assign(socket, account: session["account"], state: "new", tsv_data: "", table: %Table{})}
+      state = %State{account: session["account"]}
+      {:ok, assign(socket, state: state)}
     else
       {:ok, redirect(socket, to: Routes.page_path(socket, :index))}
     end
   end
 
   @impl true
-  def handle_event("recover", %{"data" => %{"tsv" => tsv_data}}, socket) do
-    table = Table.from_tsv(tsv_data)
-    {:noreply, assign(socket, state: "parsed", tsv_data: tsv_data, table: table)}
+  def handle_event("recover", %{"batch" => %{"table_data" => table_data}}, socket) do
+    {:noreply, update_table_data(socket, table_data)}
   end
 
-  def handle_event("parse_data", %{"data" => %{"tsv" => tsv_data}}, socket) do
-    table = Table.from_tsv(tsv_data)
-    {:noreply, assign(socket, state: "parsed", tsv_data: tsv_data, table: table)}
+  def handle_event("parse_data", %{"batch" => %{"table_data" => table_data}}, socket) do
+    {:noreply, update_table_data(socket, table_data)}
   end
 
-  def handle_event("set_state", %{"state" => state}, socket) do
+  def handle_event("set_phase", %{"phase" => phase}, socket) do
+    state = %{socket.assigns.state | phase: phase}
     {:noreply, assign(socket, state: state)}
+  end
+
+  defp update_table_data(socket, table_data) do
+    state = %{socket.assigns.state |
+      batch: %{socket.assigns.state.batch | table_data: table_data},
+      changeset: Batch.changeset(socket.assigns.state.batch, %{table_data: table_data}),
+      table: Table.from_tsv(table_data),
+      phase: "parsed"
+    }
+    assign(socket, state: state)
   end
 end

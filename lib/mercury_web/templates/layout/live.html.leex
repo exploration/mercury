@@ -1,9 +1,9 @@
 <header role="header" class="flex pa2 pa4-ns">
   <div class="mr2">
-    <%= img_tag @account.picture, class: "br-100", width: 25, height: 25 %>
+    <%= img_tag @state.account.picture, class: "br-100", width: 25, height: 25 %>
   </div>
   <div class="mt1 mr2 fw7">
-    <%= @account.name %>
+    <%= @state.account.name %>
   </div>
   <div class="mt1">
     <%= link "👋", to: Routes.page_path(@socket, :delete), title: "log out", class: xc("link") <> " underline" %>
