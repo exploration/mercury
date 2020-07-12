@@ -21,16 +21,26 @@
     <table class="w-100 mw9 table collapse">
       <thead>
         <tr class="fw7 tl bb x-b--blue">
+          <th class="w2 br x-b--blue tc">#</th>
           <%= for field <- @state.table.header.fields do %>
             <th class="pa2 br x-b--blue">&lt;&lt;<%= field %>&gt;&gt;</th>
           <% end %>
         </tr>
       </thead>
       <tbody>
-        <%= for row <- @state.table.rows do %>
-          <tr class="striped--near-white">
+        <%= for {row, index} <- Enum.with_index(@state.table.rows) do %>
+          <tr class="<%= if @state.selected_row == index do "fw7 x-bg-lightorange" else "striped--near-white" end %> pointer" phx-value-row="<%= index %>" phx-click="select_row">
+            <td class="w2 tc br x-b--blue">
+              <%= if @state.selected_row == index do %>
+                👉
+              <% else %>
+                <%= index %>
+              <% end %>
+            </td>
             <%= for field <- row.fields do %>
-              <td class="pa2 br x-b--blue"><%= field %></td>
+              <td class="pa2 br x-b--blue">
+                <%= field %>
+              </td>
             <% end %>
           </tr>
         <% end %>
@@ -106,9 +116,9 @@
         <%= textarea f, :body, class: xc("textarea") %>
       </div>
     </div>
-    <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+    <pre class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns x-tahoma">
       <%= State.merge(@state, :body) %>
-    </div>
+    </pre>
   </div>
   <div class="mt4">
     <%= submit "send batch", class: xc("btn") %>
