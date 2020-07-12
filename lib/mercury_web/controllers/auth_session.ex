@@ -2,6 +2,7 @@ defmodule MercuryWeb.AuthSession do
   @moduledoc "Session management for authentication"
 
   import Plug.Conn
+  alias Mercury.Account
 
   def init(options), do: options
 
@@ -18,7 +19,12 @@ defmodule MercuryWeb.AuthSession do
 
   @doc "Test login"
   def logged_in?(conn) do
-    %Mercury.Account{} = Map.get(conn.assigns, :account)
+    get_session(conn, :account)
+  end
+
+  @doc "Test login, given a session map (like in a liveview)"
+  def logged_in_session?(session) do
+    %Mercury.Account{email: _email} = Map.get(session, :account, %Account{})
   end
 
   @doc "Login adds an account to the session storage"

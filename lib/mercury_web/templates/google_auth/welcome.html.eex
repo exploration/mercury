@@ -1,2 +1,0 @@
-<img src="<%= @account.picture %>" alt="<%= @account.name %>" class="br-100" width="2rem" height="2rem">
-welcome, <%= inspect @account %>

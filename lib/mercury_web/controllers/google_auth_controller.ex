@@ -13,6 +13,6 @@ defmodule MercuryWeb.GoogleAuthController do
 
     conn
     |> AuthSession.login(account)
-    |> render(:welcome, account: account)
+    |> redirect(to: "/")
   end
 end

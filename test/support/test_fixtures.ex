@@ -30,7 +30,9 @@ defmodule Mercury.TestFixtures do
   """
   def login(%{conn: conn}) do
     account = account()
-    conn = Plug.Conn.assign(conn, :account, account)
+    conn = 
+      Plug.Conn.assign(conn, :account, account)
+      |> Plug.Test.init_test_session(%{account: account})
     {:ok, conn: conn, account: account}
   end
 end
