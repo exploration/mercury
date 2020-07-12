@@ -1,14 +1,22 @@
 <%= f = form_for :data, "#", 
-  phx_change: "parse_data",
+  phx_submit: "parse_data",
   phx_auto_recover: "recover"
 %>
-<%= label :data, :tsv, "1. Paste your spreadsheet text (CSV with header rows) here:", class: xc("label") %>
-<div class="mt2">
-  <%= textarea f, :tsv, class: xc("textarea") <> " w-100 mw9 f6" %>
-</div>
+<%= if @state == "new" do %>
+  <%= label :data, :tsv, "1. Paste your spreadsheet text (CSV with header rows) here:", class: xc("label") %>
+  <div class="mt2">
+    <%= textarea f, :tsv, value: @tsv_data, class: xc("textarea") <> " w-100 mw9 f6" %>
+  </div>
+  <div class="mt2 mb4">
+    <%= submit "save", class: xc("btn-s") %>
+  </div>
+<% end %>
 
-<%= if @table.field_count > 0 do %>
-  <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") <> " mt4" %>
+<%= if @state != "new" do %>
+  <div class="flex justify-between">
+    <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") %>
+    <%= link "👆 Go Back", to: "#", class: xc("link"), phx_value_state: "new", phx_click: "set_state" %>
+  </div>
   <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
     <table class="w-100 mw9 table collapse">
       <thead>
