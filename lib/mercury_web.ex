@@ -88,6 +88,7 @@ defmodule MercuryWeb do
 
       import MercuryWeb.ErrorHelpers
       import MercuryWeb.Gettext
+      import ExCssHelper
       alias MercuryWeb.Router.Helpers, as: Routes
     end
   end

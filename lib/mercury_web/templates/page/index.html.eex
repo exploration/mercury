@@ -1,5 +1,3 @@
 <section>
-  <a href="<%= @oauth_google_url %>">
-    Log in with Google
-  </a>
+  <%= link "Log in with Google", to: @oauth_google_url, class: xc("btn-s") %>
 </section>
