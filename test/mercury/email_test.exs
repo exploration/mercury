@@ -9,7 +9,7 @@ defmodule Mercury.EmailTest do
       Enum.each(Enum.with_index(state.table.rows), fn {_row, index} ->
         email = Email.email(%{state | selected_row: index})
         assert email.to == Table.get_field(state.table, index, "Email")
-        assert email.from == "from@from.org"
+        assert email.from == {"A Person", "from@from.org"}
         assert email.text_body =~ Table.get_field(state.table, index, "First Name")
       end)
     end

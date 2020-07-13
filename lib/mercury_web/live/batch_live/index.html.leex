@@ -71,13 +71,26 @@
   <%= hidden_input f, :table_data, value: @state.batch.table_data %>
   <div class="mt4 flex-ns">
     <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
-      <%= label f, :from, "FROM", class: xc("label") %>
-      <div class="mt2">
-        <%= text_input f, :from, class: xc("input-text") %>
+      <div class="flex">
+        <div class="w-50 pr3">
+          <%= label f, :from_name, "FROM NAME", class: xc("label") %>
+          <div class="mt2">
+            <%= text_input f, :from_name, class: xc("input-text") %>
+          </div>
+          <%= error_tag f, :from_name %>
+        </div>
+        <div class="w-50">
+          <%= label f, :from, "FROM EMAIL", class: xc("label") %>
+          <div class="mt2">
+            <%= text_input f, :from, class: xc("input-text") %>
+          </div>
+          <%= error_tag f, :from %>
+        </div>
       </div>
-        <%= error_tag f, :from %>
     </div>
     <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+      <%= State.merge(@state, :from_name) %>
+      &nbsp;
       <%= State.merge(@state, :from) %>
     </div>
   </div>
@@ -134,5 +147,13 @@
   <% end %>
   <div class="mt4">
     <%= submit "send batch", class: xc("btn") %>
+  </div>
+<% end %>
+
+<%= if @state.batch.send_report do %>
+  <div class="mt4">
+    <pre>
+      <%= inspect @state.batch.send_report %>
+    </pre>
   </div>
 <% end %>

@@ -50,8 +50,10 @@ defmodule Mercury.TestFixtures do
   def batch_attrs() do
     %{
       body: "test body {{First Name}}",
+      bcc: "bcc@cc.org",
       cc: "cc@cc.org",
       creator: account(),
+      from_name: "A Person",
       from: "from@from.org",
       send_report: [%{status_code: 200, headers: [""], body: "cool"}],
       subject: "test subject",

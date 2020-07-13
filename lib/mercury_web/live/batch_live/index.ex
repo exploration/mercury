@@ -92,17 +92,28 @@ defmodule MercuryWeb.BatchLive.Index do
   def send_emails(socket) do
     state = socket.assigns.state
     send_report = Enum.map(Enum.with_index(state.table.rows), fn {_row, index} ->
-      {_, {status, email}} = 
-        Email.email(%{state | selected_row: index})
-        |> Mailer.deliver_now(response: true)
-      %{email: email, status: status}
+      case Mix.env do
+        :test ->
+          {_, {status, email}} = 
+            Email.email(%{state | selected_row: index})
+            |> Mailer.deliver_now(response: true)
+            %{email: inspect(email), status: inspect(status)}
+        _ -> 
+          email = Email.email(%{state | selected_row: index})
+          {_, status} = try do
+            Mailer.deliver_now(email, response: true)
+          rescue
+            e -> {:error, inspect(e)}
+          end
+          %{email: inspect(email), status: inspect(status)}
+      end
     end)
 
     changeset = 
       state.changeset
       |> Ecto.Changeset.change(send_report: send_report)
       |> Batch.validate()
-    
+
     {:ok, batch} = Mercury.Repo.insert(changeset)
 
     {batch, changeset}

@@ -43,7 +43,7 @@ defmodule Mercury.Batch.State do
   def merge(state, field) do
     template = Ecto.Changeset.get_field(state.changeset, field)
     if template == nil || state.table.field_count == 0 do
-      ""
+      nil
     else
       Regex.split(@field_regex, template, include_captures: true)
       |> Enum.map(fn part ->
