@@ -7,7 +7,7 @@ defmodule Mercury.Repo.Migrations.CreateBatches do
       add :cc, :string
       add :creator, :map
       add :from, :string
-      add :send_report, :text
+      add :send_report, {:array, :map}
       add :subject, :string
       add :table_data, :text
       add :to, :string

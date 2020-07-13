@@ -7,7 +7,7 @@ defmodule Mercury.Batch.Batch do
     field :cc, :string
     field :creator, :map
     field :from, :string
-    field :send_report, :string
+    field :send_report, {:array, :map}
     field :subject, :string
     field :table_data, :string
     field :to, :string

@@ -48,6 +48,7 @@ defmodule Mercury.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
 
+      {:bamboo, "~> 1.5"},
       {:elixir_auth_google, "~> 1.1.0"},
       {:ex_css_helper, git: "https://bitbucket.org/explo/ex_css_helper.git"},
     ]

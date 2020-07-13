@@ -1,4 +1,6 @@
 defmodule Mercury.Account do
+  @derive Jason.Encoder
+
   defstruct [:email, :email_verified, :family_name, :given_name, :hd, :locale, :picture, :profile, :sub] 
 
   @doc """

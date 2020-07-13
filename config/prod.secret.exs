@@ -39,3 +39,12 @@ config :mercury, MercuryWeb.Endpoint,
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
+#
+
+mandrill_api_token = System.get_env("MANDRILL_API_TOKEN") ||
+  raise """
+  environment variable MANDRILL_API_TOKEN is missing.
+  """
+config :mercury, Mercury.Mailer,
+  adapter: Bamboo.MandrillAdapter,
+  api_key: mandrill_api_token
