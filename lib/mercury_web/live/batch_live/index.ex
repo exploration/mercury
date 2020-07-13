@@ -8,11 +8,21 @@ defmodule MercuryWeb.BatchLive.Index do
   alias MercuryWeb.AuthSession
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(params, session, socket) do
     if AuthSession.logged_in_session?(session) do
-      batch = %Batch{creator: session["account"]}
-      state = %State{account: session["account"], batch: batch}
-      {:ok, assign(socket, state: state)}
+      case params do
+        %{"id" => id} ->
+          batch = Mercury.Batch.get(id)
+          changeset = Batch.change(batch, %{})
+          state = 
+            %State{account: session["account"], batch: batch, changeset: changeset, table: Table.from_tsv(batch.table_data)}
+            |> State.assign_phase()
+          {:ok, assign(socket, state: state)}
+        _ ->
+          batch = %Batch{creator: session["account"]}
+          state = %State{account: session["account"], batch: batch}
+          {:ok, assign(socket, state: state)}
+      end
     else
       {:ok, redirect(socket, to: Routes.page_path(socket, :index))}
     end
@@ -82,10 +92,8 @@ defmodule MercuryWeb.BatchLive.Index do
 
   @impl true
   def handle_info(:send_emails, socket) do
-    {batch, changeset} = send_emails(socket)
-    {:noreply, assign(socket, :state, %{socket.assigns.state |
-      changeset: changeset, batch: batch, updating: false
-    })}
+    {batch, _changeset} = send_emails(socket)
+    {:noreply, push_redirect(socket, to: Routes.batch_index_path(socket, :index, batch.id))}
   end
 
   @doc false
@@ -119,21 +127,12 @@ defmodule MercuryWeb.BatchLive.Index do
     {batch, changeset}
   end
 
-  defp assign_phase(state) do
-    case state do
-      %{batch: %Batch{table_data: ""}} ->
-        %{state| phase: "new"}
-      _ -> 
-        %{state| phase: "parsed"}
-    end
-  end
-
   defp update_table_data(socket, table_data) do
     state = %{socket.assigns.state |
       batch: %{socket.assigns.state.batch | table_data: table_data},
       table: Table.from_tsv(table_data),
     }
-    |> assign_phase()
+    |> State.assign_phase()
     assign(socket, state: state)
   end
 end

@@ -14,9 +14,10 @@
 
 <%= if State.up_to_phase @state, "parsed" do %>
   <div class="flex justify-between">
-    <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") %>
-    <%= link "👆 edit data", to: "#", class: xc("link"), phx_value_phase: "new", phx_click: "override_phase" %>
+    <%= content_tag :div, "1. Raw spreadsheet data", class: xc("label") %>
+    <%= link "👈 edit data", to: "#", class: xc("link"), phx_value_phase: "new", phx_click: "override_phase" %>
   </div>
+  <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") <> " mt4" %>
   <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
     <table class="w-100 mw9 table collapse">
       <thead>
@@ -48,8 +49,8 @@
     </table>
   </div>
 
-  <%= content_tag :div, "3. Your email template:", class: xc("label") <> " mt5" %>
-  <div class="mt3 flex justify-between">
+  <%= content_tag :div, "3. Your email template:", class: xc("label") <> " mt4" %>
+  <div class="mt2 flex justify-between">
     <div>
       <%= link "<<", to: "#", phx_click: "decrement_selected_row", class: xc("btn-s", replace: [{"ph4 ph5-ns", "ph2"}]) %>
     </div>
@@ -145,13 +146,20 @@
   <%= if @state.updating do %>
     <div class="mt4 x-red">Sending emails now, please wait...</div>
   <% end %>
-  <div class="mt4">
-    <%= submit "send batch", class: xc("btn") %>
-  </div>
+  <%= if State.up_to_phase @state, "sent" do %>
+    <div class="mt4">
+      <%= submit "batch send disabled", disabled: "disabled", class: xc("btn-white", replace: [{"bg-white", "x-bg-palegray"}]) %>
+    </div>
+  <% else %>
+    <div class="mt4">
+      <%= submit "send batch", class: xc("btn") %>
+    </div>
+  <% end %>
 <% end %>
 
-<%= if @state.batch.send_report do %>
-  <div class="w-100 mw9 mt4 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
+<%= if State.up_to_phase @state, "sent" do %>
+  <%= content_tag :div, "4. Your send results:", class: xc("label") <> " mt4" %>
+  <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
     <table class="w-100 mw9 table collapse">
       <thead>
         <tr class="fw7 tl bb x-b--blue">
@@ -165,13 +173,13 @@
       <tbody>
         <%= for report <- @state.batch.send_report do %>
           <tr class="striped--near-white">
-            <td class="pa2 tc br x-b--blue <%= if report.status == "200" do "x-bg-lightgreen bb" else "x-bg-palered" end %>">
-              <%= report.status %>
+            <td class="pa2 tc br x-b--blue <%= if report["status"] == "200" do "x-bg-lightgreen bb" else "x-bg-palered" end %>">
+              <%= report["status"] %>
             </td>
-            <td class="pa2 tc br x-b--blue"><%= report.from %></td>
-            <td class="pa2 tc br x-b--blue"><%= report.to %></td>
-            <td class="pa2 tc br x-b--blue"><%= report.cc %></td>
-            <td class="pa2 tc br x-b--blue"><%= report.subject %></td>
+            <td class="pa2 tc br x-b--blue"><%= report["from"] %></td>
+            <td class="pa2 tc br x-b--blue"><%= report["to"] %></td>
+            <td class="pa2 tc br x-b--blue"><%= report["cc"] %></td>
+            <td class="pa2 tc br x-b--blue"><%= report["subject"] %></td>
           </tr>
         <% end %>
       </tbody>

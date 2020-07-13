@@ -21,6 +21,7 @@ defmodule MercuryWeb.Router do
     get "/", PageController, :index
     get "/logout", PageController, :delete
     live "/batches", BatchLive.Index, :index
+    live "/batches/:id", BatchLive.Index, :index
 
     get "/auth/google/callback", GoogleAuthController, :index
   end

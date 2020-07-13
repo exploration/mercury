@@ -1,5 +1,5 @@
 defmodule Mercury.Batch.Report do
-  @derive {Jason.Encoder, only: [:from, :from_name, :to, :cc, :bcc, :subject, :text_body]}
+  @derive {Jason.Encoder, only: [:from, :from_name, :to, :cc, :bcc, :subject, :text_body, :status]}
 
   defstruct [:bamboo_email, :from, :from_name, :to, :cc, :bcc, :subject, :text_body, :status]
 

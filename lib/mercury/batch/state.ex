@@ -1,4 +1,14 @@
 defmodule Mercury.Batch.State do
+  @moduledoc """
+  This is the "state" of a given Batch in the app. It's used to hold information about where in the process the current Batch is located. It also contains logic for phase comparison.
+
+  The Batch can be in one of three phases:
+
+  - "new" - No table data has been entered, we're just starting
+  - "parsed" - Table data has been entered, but we haven't sent any emails yet
+  - "sent" - Emails have been sent and we're now looking at a saved Batch.
+  """
+
   alias Mercury.{Account, Table}
   alias Mercury.Batch.Batch
 
@@ -13,6 +23,20 @@ defmodule Mercury.Batch.State do
   ]
   
   @field_regex ~r/{{([a-zA-Z0-9 -_]+)}}/
+
+  @doc """
+  Given a State, return the appropriate phase
+  """
+  def assign_phase(state) do
+    case state do
+      %{batch: %Batch{id: something}} ->
+        %{state| phase: "sent"}
+      %{batch: %Batch{table_data: ""}} ->
+        %{state| phase: "new"}
+      _ -> 
+        %{state| phase: "parsed"}
+    end
+  end
 
   @doc """
   Returns `true` if the state is precisely at the specified phase

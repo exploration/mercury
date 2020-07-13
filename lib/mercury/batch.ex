@@ -17,6 +17,13 @@ defmodule Mercury.Batch do
   end
 
   @doc """
+  Retrieve a batch by ID. Returns `nil` if no result was found.
+  """
+  def get(id) do
+    Repo.get(Batch, id)
+  end
+
+  @doc """
   List all sent batches
   """
   def list() do
