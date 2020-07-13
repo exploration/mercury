@@ -1,4 +1,22 @@
-<main role="main" class="pa2">
+<%= if @account do %>
+  <header role="header" class="flex justify-between pa2 ph4-ns pv3-ns">
+    <div class="flex">
+      <div class="mr2">
+        <%= img_tag @account.picture, alt: @account.name, title: @account.name, class: "br-100", width: 25, height: 25 %>
+      </div>
+      <div class="mr2">
+        <%= link "📃", to: Routes.batch_path(@conn, :index), title: "view my batches", class: xc("link") %>
+      </div>
+      <div>
+        <%= link "➕", to: Routes.batch_index_path(@conn, :index), title: "add new batch", class: xc("link") %>
+      </div>
+    </div>
+    <div>
+      <%= link "👋 Log Out", to: Routes.page_path(@conn, :delete), title: "log out", class: xc("link") %>
+    </div>
+  </header>
+<% end %>
+<main role="main" class="pa2 ph4-ns pb4-ns">
   <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
   <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
   <%= @inner_content %>

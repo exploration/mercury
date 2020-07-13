@@ -1,0 +1,32 @@
+<h1 class="mv0">Batches</h1>
+<div class="mt1 f4"><%= @account.name %></div>
+<div class="w-100 mw9 mt4 ba br1 x-b--blue" style="resize:both">
+  <table class="w-100 mw9 table collapse">
+    <thead>
+      <tr class="fw7 tl bb x-b--blue">
+        <th class="w4 pa2 br x-b--blue"># Recipients</th>
+        <th class="w4 pa2 br x-b--blue">Sent On</th>
+        <th class="pa2 br x-b--blue">Subject</th>
+        <th class="w4 pa2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for batch <- @batches do %>
+        <tr class="striped--near-white">
+          <td class="pa2 br x-b--blue">
+            <%= Enum.count batch.send_report %>
+          </td>
+          <td class="pa2 br x-b--blue">
+            <%= batch.inserted_at %>
+          </td>
+          <td class="pa2 br x-b--blue">
+            <%= batch.subject %>
+          </td>
+          <td class="pa2">
+            <%= link "👀 View", to: Routes.batch_index_path(@conn, :index, batch.id), class: xc("link") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

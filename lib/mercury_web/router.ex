@@ -19,11 +19,13 @@ defmodule MercuryWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/auth/google/callback", GoogleAuthController, :index
     get "/logout", PageController, :delete
+
     live "/batches", BatchLive.Index, :index
     live "/batches/:id", BatchLive.Index, :index
 
-    get "/auth/google/callback", GoogleAuthController, :index
+    resources "/list", BatchController, only: [:index]
   end
 
   # Other scopes may use custom stacks.

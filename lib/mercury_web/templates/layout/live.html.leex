@@ -1,14 +1,18 @@
-<header role="header" class="flex pa2 pa4-ns">
-  <div class="mr2">
-    <%= img_tag @state.account.picture, class: "br-100", width: 25, height: 25 %>
+<header role="header" class="flex justify-between pa2 ph4-ns pv3-ns">
+  <div class="flex">
+    <div class="mr2">
+      <%= img_tag @state.account.picture, alt: @state.account.name, title: @state.account.name, class: "br-100", width: 25, height: 25 %>
+    </div>
+    <div class="mr2">
+      <%= link "📃", to: Routes.batch_path(@socket, :index), title: "view my batches", class: xc("link") %>
+    </div>
+    <div>
+      <%= link "➕", to: Routes.batch_index_path(@socket, :index), title: "add new batch", class: xc("link") %>
+    </div>
   </div>
-  <div class="mt1 mr2 fw7">
-    <%= @state.account.name %>
+  <div>
+    <%= link "👋 Log Out", to: Routes.page_path(@socket, :delete), title: "log out", class: xc("link") %>
   </div>
-  <div class="mt1">
-    <%= link "👋", to: Routes.page_path(@socket, :delete), title: "log out", class: xc("link") <> " underline" %>
-  </div>
-  
 </header>
 <main role="main" class="pa2 ph4-ns pb4-ns">
   <p class="alert alert-info" role="alert"

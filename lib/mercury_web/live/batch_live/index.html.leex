@@ -15,7 +15,7 @@
 <%= if State.up_to_phase @state, "parsed" do %>
   <div class="flex justify-between">
     <%= content_tag :div, "1. Raw spreadsheet data", class: xc("label") %>
-    <%= link "👈 edit data", to: "#", class: xc("link"), phx_value_phase: "new", phx_click: "override_phase" %>
+    <%= link "👈 Edit Data", to: "#", class: xc("link"), phx_value_phase: "new", phx_click: "override_phase" %>
   </div>
   <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") <> " mt4" %>
   <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
@@ -186,7 +186,7 @@
                 <%= index %>
               <% end %>
             </td>
-            <td class="pa2 br x-b--blue <%= if report["status"] == "200" do "x-bg-lightgreen bb" else "x-bg-palered" end %>">
+            <td class="pa2 br x-b--blue <%= if report["status"] == "200" do "x-green fw7" else "x-red" end %>">
               <%= report["status"] %>
             </td>
             <td class="pa2 br x-b--blue"><%= report["from"] %></td>
