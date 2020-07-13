@@ -16,5 +16,20 @@ defmodule MercuryWeb.BatchLiveTest do
     
       assert html =~ account.name
     end
+
+    test "delivering emails", %{conn: conn} do
+      state = batch_state()
+      {batch, changeset} = 
+        conn
+        |> assign(:state, state)
+        |> MercuryWeb.BatchLive.Index.send_emails()
+      assert Enum.count(Ecto.Changeset.get_change(changeset, :send_report)) == 3
+      Enum.each batch.send_report, fn report ->
+        assert report.status == :delivered_email
+        assert %Bamboo.Email{} = report.email
+      end
+
+      assert Enum.count(Mercury.Batch.list()) == 1
+    end
   end
 end

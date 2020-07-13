@@ -4,7 +4,7 @@ defmodule MercuryWeb.BatchLive.Index do
   """
 
   use MercuryWeb, :live_view
-  alias Mercury.{Batch.Batch, Batch.State, Table}
+  alias Mercury.{Batch.Batch, Batch.State, Email, Mailer, Table}
   alias MercuryWeb.AuthSession
 
   @impl true
@@ -58,12 +58,13 @@ defmodule MercuryWeb.BatchLive.Index do
   end
 
   def handle_event("send_batch", %{"batch" => params}, socket) do
-    state = %{socket.assigns.state |
-      changeset: 
-        Batch.change(socket.assigns.state.batch, params) 
-        |> Batch.validate()
-    }
-    {:noreply, assign(socket, :state, state)}
+    changeset = 
+      Batch.change(socket.assigns.state.batch, params) 
+      |> Batch.validate()
+    if changeset.valid? do
+      Process.send_after(self(), :send_emails, 1)
+    end
+    {:noreply, assign(socket, :state, %{socket.assigns.state | changeset: changeset})}
   end
 
   def handle_event("validate_batch", %{"batch" => params}, socket) do
@@ -73,6 +74,32 @@ defmodule MercuryWeb.BatchLive.Index do
         |> Batch.validate()
     }
     {:noreply, assign(socket, :state, state)}
+  end
+
+  @impl true
+  def handle_info(:send_emails, socket) do
+    {batch, changeset} = send_emails(socket)
+    {:noreply, assign(socket, :state, %{socket.assigns.state | changeset: changeset, batch: batch})}
+  end
+
+  @doc false
+  def send_emails(socket) do
+    state = socket.assigns.state
+    send_report = Enum.map(Enum.with_index(state.table.rows), fn {_row, index} ->
+      {_, {status, email}} = 
+        Email.email(%{state | selected_row: index})
+        |> Mailer.deliver_now(response: true)
+      %{email: email, status: status}
+    end)
+
+    changeset = 
+      state.changeset
+      |> Ecto.Changeset.change(send_report: send_report)
+      |> Batch.validate()
+    
+    {:ok, batch} = Mercury.Repo.insert(changeset)
+
+    {batch, changeset}
   end
 
   defp assign_phase(state) do

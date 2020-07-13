@@ -129,6 +129,9 @@
       <%= State.merge(@state, :body) %>
     </pre>
   </div>
+  <%= if @state.updating do %>
+    <div class="mt4 x-red">updating...</div>
+  <% end %>
   <div class="mt4">
     <%= submit "send batch", class: xc("btn") %>
   </div>

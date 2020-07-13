@@ -15,4 +15,11 @@ defmodule Mercury.Batch do
     |> Batch.validate()
     |> Repo.insert() 
   end
+
+  @doc """
+  List all sent batches
+  """
+  def list() do
+    Repo.all(Batch)
+  end
 end

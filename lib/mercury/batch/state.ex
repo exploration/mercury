@@ -8,7 +8,8 @@ defmodule Mercury.Batch.State do
     changeset: Batch.change(%Batch{}, %{}),
     phase: "new",
     selected_row: 0,
-    table: %Table{}
+    table: %Table{},
+    updating: false,
   ]
   
   @field_regex ~r/{{([a-zA-Z0-9 -_]+)}}/
