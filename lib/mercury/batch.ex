@@ -29,4 +29,14 @@ defmodule Mercury.Batch do
   def list() do
     Repo.all(Batch)
   end
+
+  @doc """
+  Update a Batch 
+  """
+  def update(batch, attrs \\ %{}) do
+    batch
+    |> Batch.change(attrs)
+    |> Batch.validate()
+    |> Repo.update()
+  end
 end

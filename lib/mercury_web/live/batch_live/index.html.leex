@@ -146,15 +146,20 @@
   <%= if @state.updating do %>
     <div class="mt4 x-red">Sending emails now, please wait...</div>
   <% end %>
-  <%= if State.up_to_phase @state, "sent" do %>
-    <div class="mt4">
-      <%= submit "batch send disabled", disabled: "disabled", class: xc("btn-white", replace: [{"bg-white", "x-bg-palegray"}]) %>
+  <div class="mt4 flex-ns">
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= if State.up_to_phase @state, "sent" do %>
+        <%= submit "batch send disabled", disabled: "disabled", class: xc("btn-white", replace: [{"bg-white", "x-bg-lightgray"},{"x-hover-bg-lightblue", ""}]) %>
+      <% else %>
+        <%= submit "send batch", class: xc("btn") %>
+      <% end %>
     </div>
-  <% else %>
-    <div class="mt4">
-      <%= submit "send batch", class: xc("btn") %>
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= if State.up_to_phase @state, "sent" do %>
+        <%= link "send this one", to: "#", "phx-click": "send_one_email", class: xc("btn-white") %>
+      <% end %>
     </div>
-  <% end %>
+  </div>
 <% end %>
 
 <%= if State.up_to_phase @state, "sent" do %>
@@ -163,26 +168,41 @@
     <table class="w-100 mw9 table collapse">
       <thead>
         <tr class="fw7 tl bb x-b--blue">
-          <th class="pa2 br x-b--blue tc">Status</th>
-          <th class="pa2 br x-b--blue tc">From</th>
-          <th class="pa2 br x-b--blue tc">To</th>
-          <th class="pa2 br x-b--blue tc">CC</th>
-          <th class="pa2 br x-b--blue tc">Subject</th>
+          <th class="w2 br x-b--blue tc">#</th>
+          <th class="pa2 br x-b--blue">Status</th>
+          <th class="pa2 br x-b--blue">From</th>
+          <th class="pa2 br x-b--blue">To</th>
+          <th class="pa2 br x-b--blue">CC</th>
+          <th class="pa2 br x-b--blue">Subject</th>
         </tr>
       </thead>
       <tbody>
-        <%= for report <- @state.batch.send_report do %>
-          <tr class="striped--near-white">
-            <td class="pa2 tc br x-b--blue <%= if report["status"] == "200" do "x-bg-lightgreen bb" else "x-bg-palered" end %>">
+        <%= for {report, index} <- Enum.with_index(@state.batch.send_report) do %>
+          <tr class="<%= if @state.selected_row == index do "x-bg-lightorange" else "striped--near-white" end %> pointer" phx-value-row="<%= index %>" phx-click="select_row">
+            <td class="w2 tc br x-b--blue">
+              <%= if @state.selected_row == index do %>
+                👉
+              <% else %>
+                <%= index %>
+              <% end %>
+            </td>
+            <td class="pa2 br x-b--blue <%= if report["status"] == "200" do "x-bg-lightgreen bb" else "x-bg-palered" end %>">
               <%= report["status"] %>
             </td>
-            <td class="pa2 tc br x-b--blue"><%= report["from"] %></td>
-            <td class="pa2 tc br x-b--blue"><%= report["to"] %></td>
-            <td class="pa2 tc br x-b--blue"><%= report["cc"] %></td>
-            <td class="pa2 tc br x-b--blue"><%= report["subject"] %></td>
+            <td class="pa2 br x-b--blue"><%= report["from"] %></td>
+            <td class="pa2 br x-b--blue"><%= report["to"] %></td>
+            <td class="pa2 br x-b--blue"><%= report["cc"] %></td>
+            <td class="pa2 br x-b--blue"><%= report["subject"] %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
+  </div>
+  <% report = Enum.at(@state.batch.send_report, @state.selected_row) %>
+  <div class="mt3 pl3 bl bw3 x-b--lightgray">
+    <%= content_tag :div, "Subject:", class: xc("label") <> " mt3" %>
+    <div class="mt1"><%= report["subject"] %></div>
+    <%= content_tag :div, "Body:", class: xc("label") <> " mt3" %>
+    <div class="mt1"><%= raw report["text_body"] %></div>
   </div>
 <% end %>

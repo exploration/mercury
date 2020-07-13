@@ -81,6 +81,25 @@ defmodule MercuryWeb.BatchLive.Index do
     {:noreply, assign(socket, :state, %{socket.assigns.state | changeset: changeset})}
   end
 
+  def handle_event("send_one_email", _params, socket) do
+    state = socket.assigns.state
+    report = 
+      send_email(state, state.selected_row)
+      |> Jason.encode! |> Jason.decode!
+    if State.at_phase(state, "sent") do
+      send_report = List.replace_at(state.batch.send_report, state.selected_row, report)
+      case Mercury.Batch.update(state.batch, %{send_report: send_report}) do
+        {:ok, batch} -> 
+          {:noreply, assign(socket, :state, %{state | batch: batch})}
+
+        _ -> 
+          {:noreply, socket}
+      end
+    else
+      {:noreply, socket}
+    end
+  end
+
   def handle_event("validate_batch", %{"batch" => params}, socket) do
     state = %{socket.assigns.state |
       changeset: 
@@ -99,23 +118,12 @@ defmodule MercuryWeb.BatchLive.Index do
   @doc false
   def send_emails(socket) do
     state = socket.assigns.state
-    send_report = Enum.map(Enum.with_index(state.table.rows), fn {_row, index} ->
-      case Mix.env do
-        :test ->
-          {_, {status, email}} = 
-            Email.email(%{state | selected_row: index})
-            |> Mailer.deliver_now(response: true)
-            Report.new(email, status)
-        _ -> 
-          email = Email.email(%{state | selected_row: index})
-          {_, %{status_code: status}} = try do
-            Mailer.deliver_now(email, response: true)
-          rescue
-            e -> {:error, e}
-          end
-          Report.new(email, status)
-      end
-    end)
+    send_report = 
+      state.table.rows
+      |> Enum.with_index()
+      |> Enum.map(fn {_row, index} ->
+        send_email(state, index)
+      end)
 
     changeset = 
       state.changeset
@@ -125,6 +133,24 @@ defmodule MercuryWeb.BatchLive.Index do
     {:ok, batch} = Mercury.Repo.insert(changeset)
 
     {batch, changeset}
+  end
+
+  defp send_email(state, index) do
+    case Mix.env do
+      :test ->
+        {_, {status, email}} = 
+          Email.email(%{state | selected_row: index})
+          |> Mailer.deliver_now(response: true)
+          Report.new(email, status)
+      _ -> 
+        email = Email.email(%{state | selected_row: index})
+        {_, %{status_code: status}} = try do
+          Mailer.deliver_now(email, response: true)
+        rescue
+          e -> {:error, e}
+        end
+        Report.new(email, status)
+    end
   end
 
   defp update_table_data(socket, table_data) do

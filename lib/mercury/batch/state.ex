@@ -29,7 +29,7 @@ defmodule Mercury.Batch.State do
   """
   def assign_phase(state) do
     case state do
-      %{batch: %Batch{id: something}} ->
+      %{batch: %Batch{id: id}} when not is_nil(id) ->
         %{state| phase: "sent"}
       %{batch: %Batch{table_data: ""}} ->
         %{state| phase: "new"}
