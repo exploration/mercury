@@ -61,9 +61,11 @@ defmodule MercuryWeb.BatchLive.Index do
     changeset = 
       Batch.change(socket.assigns.state.batch, params) 
       |> Batch.validate()
-    if changeset.valid? do
-      Process.send_after(self(), :send_emails, 1)
-    end
+    socket = 
+      if changeset.valid? do
+        Process.send_after(self(), :send_emails, 1)
+        assign(socket, :state, %{socket.assigns.state | updating: true})
+      end
     {:noreply, assign(socket, :state, %{socket.assigns.state | changeset: changeset})}
   end
 
@@ -79,7 +81,9 @@ defmodule MercuryWeb.BatchLive.Index do
   @impl true
   def handle_info(:send_emails, socket) do
     {batch, changeset} = send_emails(socket)
-    {:noreply, assign(socket, :state, %{socket.assigns.state | changeset: changeset, batch: batch})}
+    {:noreply, assign(socket, :state, %{socket.assigns.state |
+      changeset: changeset, batch: batch, updating: false
+    })}
   end
 
   @doc false
