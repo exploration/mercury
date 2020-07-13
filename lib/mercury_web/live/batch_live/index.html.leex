@@ -128,6 +128,18 @@
   </div>
   <div class="mt4 flex-ns">
     <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
+      <%= label f, :bcc, "BCC", class: xc("label") %>
+      <div class="mt2">
+        <%= text_input f, :bcc, class: xc("input-text") %>
+        <%= error_tag f, :bcc %>
+      </div>
+    </div>
+    <div class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns">
+      <%= State.merge(@state, :bcc) %>
+    </div>
+  </div>
+  <div class="mt4 flex-ns">
+    <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
       <%= label f, :subject, "SUBJECT", class: xc("label") %>
       <div class="mt2">
         <%= text_input f, :subject, class: xc("input-text") %>
