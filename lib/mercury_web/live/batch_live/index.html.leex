@@ -177,6 +177,7 @@
         <tr class="fw7 tl bb x-b--blue">
           <th class="w2 br x-b--blue tc">#</th>
           <th class="pa2 br x-b--blue">Status</th>
+          <th class="pa2 br x-b--blue">Sent</th>
           <th class="pa2 br x-b--blue">From</th>
           <th class="pa2 br x-b--blue">To</th>
           <th class="pa2 br x-b--blue">CC</th>
@@ -196,6 +197,7 @@
             <td class="pa2 br x-b--blue <%= if report["status"] == "200" do "x-green fw7" else "x-red" end %>">
               <%= report["status"] %>
             </td>
+            <td class="pa2 br x-b--blue"><%= report["sent_at"] %></td>
             <td class="pa2 br x-b--blue"><%= report["from"] %></td>
             <td class="pa2 br x-b--blue"><%= report["to"] %></td>
             <td class="pa2 br x-b--blue"><%= report["cc"] %></td>

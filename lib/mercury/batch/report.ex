@@ -1,7 +1,7 @@
 defmodule Mercury.Batch.Report do
-  @derive {Jason.Encoder, only: [:from, :from_name, :to, :cc, :bcc, :subject, :text_body, :status]}
+  @derive {Jason.Encoder, only: [:from, :from_name, :to, :cc, :bcc, :subject, :text_body, :sent_at, :status]}
 
-  defstruct [:bamboo_email, :from, :from_name, :to, :cc, :bcc, :subject, :text_body, :status]
+  defstruct [:bamboo_email, :from, :from_name, :to, :cc, :bcc, :subject, :text_body, :sent_at, :status]
 
   @doc """
   Given the results of Mailer.deliver(email) - a %Bamboo.Email{} and a status, construct a report
@@ -18,6 +18,7 @@ defmodule Mercury.Batch.Report do
       bcc: gather(email.bcc),
       subject: email.subject,
       text_body: email.text_body,
+      sent_at: NaiveDateTime.utc_now,
       status: inspect(status)
     }
   end
