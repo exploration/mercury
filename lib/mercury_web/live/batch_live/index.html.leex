@@ -83,7 +83,12 @@
           <%= error_tag f, :from_name %>
         </div>
         <div class="w-50">
-          <%= label f, :from, "FROM EMAIL (must be an EXPLO address)", class: xc("label") %>
+          <div class="dn db-l">
+            <%= label f, :from, "FROM EMAIL (an EXPLO address)", class: xc("label") %>
+          </div>
+          <div class="db dn-l">
+            <%= label f, :from, "FROM EMAIL", class: xc("label") %>
+          </div>
           <div class="mt2">
             <%= text_input f, :from, class: xc("input-text") %>
           </div>
