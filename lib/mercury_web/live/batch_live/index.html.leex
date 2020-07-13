@@ -151,9 +151,30 @@
 <% end %>
 
 <%= if @state.batch.send_report do %>
-  <div class="mt4">
-    <pre>
-      <%= inspect @state.batch.send_report %>
-    </pre>
+  <div class="w-100 mw9 mt4 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
+    <table class="w-100 mw9 table collapse">
+      <thead>
+        <tr class="fw7 tl bb x-b--blue">
+          <th class="pa2 br x-b--blue tc">Status</th>
+          <th class="pa2 br x-b--blue tc">From</th>
+          <th class="pa2 br x-b--blue tc">To</th>
+          <th class="pa2 br x-b--blue tc">CC</th>
+          <th class="pa2 br x-b--blue tc">Subject</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for report <- @state.batch.send_report do %>
+          <tr class="striped--near-white">
+            <td class="pa2 tc br x-b--blue <%= if report.status == "200" do "x-bg-lightgreen bb" else "x-bg-palered" end %>">
+              <%= report.status %>
+            </td>
+            <td class="pa2 tc br x-b--blue"><%= report.from %></td>
+            <td class="pa2 tc br x-b--blue"><%= report.to %></td>
+            <td class="pa2 tc br x-b--blue"><%= report.cc %></td>
+            <td class="pa2 tc br x-b--blue"><%= report.subject %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 <% end %>

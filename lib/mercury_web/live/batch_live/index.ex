@@ -4,7 +4,7 @@ defmodule MercuryWeb.BatchLive.Index do
   """
 
   use MercuryWeb, :live_view
-  alias Mercury.{Batch.Batch, Batch.State, Email, Mailer, Table}
+  alias Mercury.{Batch.Batch, Batch.Report, Batch.State, Email, Mailer, Table}
   alias MercuryWeb.AuthSession
 
   @impl true
@@ -97,15 +97,15 @@ defmodule MercuryWeb.BatchLive.Index do
           {_, {status, email}} = 
             Email.email(%{state | selected_row: index})
             |> Mailer.deliver_now(response: true)
-            %{email: inspect(email), status: inspect(status)}
+            Report.new(email, status)
         _ -> 
           email = Email.email(%{state | selected_row: index})
-          {_, status} = try do
+          {_, %{status_code: status}} = try do
             Mailer.deliver_now(email, response: true)
           rescue
-            e -> {:error, inspect(e)}
+            e -> {:error, e}
           end
-          %{email: inspect(email), status: inspect(status)}
+          Report.new(email, status)
       end
     end)
 

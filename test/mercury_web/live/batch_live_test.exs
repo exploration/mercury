@@ -26,8 +26,8 @@ defmodule MercuryWeb.BatchLiveTest do
         |> MercuryWeb.BatchLive.Index.send_emails()
       assert Enum.count(Ecto.Changeset.get_change(changeset, :send_report)) == 3
       Enum.each batch.send_report, fn report ->
-        assert report.status == :delivered_email
-        assert_delivered_email report.email
+        assert report.status == ":delivered_email"
+        assert_delivered_email report.bamboo_email
       end
 
       assert Enum.count(Mercury.Batch.list()) == 1
