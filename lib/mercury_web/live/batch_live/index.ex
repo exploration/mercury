@@ -13,15 +13,14 @@ defmodule MercuryWeb.BatchLive.Index do
       case params do
         %{"id" => id} ->
           batch = Mercury.Batch.get(id)
-          changeset = Batch.change(batch, %{})
-          state = 
-            %State{account: session["account"], batch: batch, changeset: changeset, table: Table.from_tsv(batch.table_data)}
-            |> State.assign_phase()
-          {:ok, assign(socket, state: state)}
+          {:ok, assign(socket, state: mount_state(session,batch))}
+        %{"dupe" => id} ->
+          batch = Mercury.Batch.get(id)
+          batch = %{batch | id: nil, send_report: []}
+          {:ok, assign(socket, state: mount_state(session,batch))}
         _ ->
           batch = %Batch{creator: session["account"]}
-          state = %State{account: session["account"], batch: batch}
-          {:ok, assign(socket, state: state)}
+          {:ok, assign(socket, state: mount_state(session,batch))}
       end
     else
       {:ok, redirect(socket, to: Routes.page_path(socket, :index))}
@@ -133,6 +132,12 @@ defmodule MercuryWeb.BatchLive.Index do
     {:ok, batch} = Mercury.Repo.insert(changeset)
 
     {batch, changeset}
+  end
+
+  defp mount_state(session, batch) do
+    changeset = Batch.change(batch, %{})
+    %State{account: session["account"], batch: batch, changeset: changeset, table: Table.from_tsv(batch.table_data)}
+    |> State.assign_phase()
   end
 
   defp send_email(state, index) do

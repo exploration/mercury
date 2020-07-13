@@ -31,7 +31,7 @@ defmodule Mercury.Batch.State do
     case state do
       %{batch: %Batch{id: id}} when not is_nil(id) ->
         %{state| phase: "sent"}
-      %{batch: %Batch{table_data: ""}} ->
+      %{batch: %Batch{table_data: nil}} ->
         %{state| phase: "new"}
       _ -> 
         %{state| phase: "parsed"}

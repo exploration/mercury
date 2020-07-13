@@ -23,7 +23,12 @@
             <%= batch.subject %>
           </td>
           <td class="pa2">
-            <%= link "👀 View", to: Routes.batch_index_path(@conn, :index, batch.id), class: xc("link") %>
+            <div>
+              <%= link "👀 View", to: Routes.batch_index_path(@conn, :index, batch.id), class: xc("link") %>
+            </div>
+            <div class="mt1">
+              <%= link "📰 Copy", to: "/duplicate/#{batch.id}", class: xc("link") %>
+            </div>
           </td>
         </tr>
       <% end %>

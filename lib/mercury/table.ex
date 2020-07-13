@@ -6,6 +6,7 @@ defmodule Mercury.Table do
   @doc """
   Given a valid TSV, convert it into a %Table{}
   """
+  def from_tsv(nil), do: nil
   def from_tsv(tsv) do
     [header | rows] = 
       tsv

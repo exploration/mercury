@@ -24,6 +24,7 @@ defmodule MercuryWeb.Router do
 
     live "/batches", BatchLive.Index, :index
     live "/batches/:id", BatchLive.Index, :index
+    live "/duplicate/:dupe", BatchLive.Index, :index
 
     resources "/list", BatchController, only: [:index]
   end
