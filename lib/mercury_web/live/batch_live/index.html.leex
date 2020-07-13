@@ -1,3 +1,5 @@
+<div class="mt2"></div>
+
 <%= if State.at_phase @state, "new" do %>
   <%= f = form_for @state.changeset, "#", 
     phx_submit: "parse_data",

@@ -1,5 +1,5 @@
 <%= if @account do %>
-  <header role="header" class="flex justify-between pa2 ph4-ns pv3-ns">
+  <header role="header" class="flex justify-between pa2 ph4-ns pt4-ns">
     <div class="flex">
       <div class="mr2">
         <%= img_tag @account.picture, alt: @account.name, title: @account.name, class: "br-100", width: 25, height: 25 %>

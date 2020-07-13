@@ -1,4 +1,4 @@
-<h1 class="mv0">Batches</h1>
+<h1 class="mb0">Batches</h1>
 <div class="mt1 f4"><%= @account.name %></div>
 <div class="w-100 mw9 mt4 ba br1 x-b--blue" style="resize:both">
   <table class="w-100 mw9 table collapse">
