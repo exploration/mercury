@@ -1,5 +1,6 @@
 defmodule MercuryWeb.BatchLiveTest do
   use MercuryWeb.ConnCase, async: true
+  use Bamboo.Test
   import Phoenix.LiveViewTest
 
   describe "Not Logged In" do
@@ -26,7 +27,7 @@ defmodule MercuryWeb.BatchLiveTest do
       assert Enum.count(Ecto.Changeset.get_change(changeset, :send_report)) == 3
       Enum.each batch.send_report, fn report ->
         assert report.status == :delivered_email
-        assert %Bamboo.Email{} = report.email
+        assert_delivered_email report.email
       end
 
       assert Enum.count(Mercury.Batch.list()) == 1

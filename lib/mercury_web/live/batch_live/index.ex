@@ -65,6 +65,8 @@ defmodule MercuryWeb.BatchLive.Index do
       if changeset.valid? do
         Process.send_after(self(), :send_emails, 1)
         assign(socket, :state, %{socket.assigns.state | updating: true})
+      else
+        socket
       end
     {:noreply, assign(socket, :state, %{socket.assigns.state | changeset: changeset})}
   end
