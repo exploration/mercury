@@ -17,8 +17,12 @@ defmodule Mercury.Email do
     |> Bamboo.MandrillHelper.template("basic-email", [%{"name" => "main", "content" => basic_html(State.merge(state, :body))}])
   end
 
-  @doc "Basic conversion of text to HTML"
+  @doc "Basic conversion of text to HTML, if there are no paragraph tags"
   def basic_html(text) do
-    String.replace text, "\n", "<br>"
+    if text =~ "<p" do
+      text
+    else
+      String.replace text, "\n", "<br>"
+    end
   end
 end
