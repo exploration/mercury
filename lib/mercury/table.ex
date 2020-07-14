@@ -10,6 +10,7 @@ defmodule Mercury.Table do
   def from_tsv(tsv) do
     [header | rows] = 
       tsv
+      |> String.replace("\r", "")
       |> String.split("\n")
       |> Enum.map(&Row.from_tsv_row/1)
 
