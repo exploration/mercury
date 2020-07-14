@@ -134,20 +134,18 @@ defmodule MercuryWeb.BatchLive.Index do
 
   @doc false
   def send_email(state, index) do
-    case Mix.env do
-      :test ->
-        {_, {status, email}} = 
-          Email.email(%{state | selected_row: index})
-          |> Mailer.deliver_now(response: true)
-          Report.new(email, status)
-      _ -> 
-        email = Email.email(%{state | selected_row: index})
-        {_, %{status_code: status}} = try do
-          Mailer.deliver_now(email, response: true)
-        rescue
-          e -> {:error, e}
-        end
+    email = Email.email(%{state | selected_row: index})
+    try do
+      case Mailer.deliver_now(email, response: true) do
+      {_, {status, email}} -> 
         Report.new(email, status)
+      {_, %{status_code: status}} ->
+        Report.new(email, status)
+      {:error, error} ->
+        Report.new(email, error)
+      end
+    rescue
+      error -> Report.new(email, error)
     end
   end
 
