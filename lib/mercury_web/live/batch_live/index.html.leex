@@ -170,7 +170,7 @@
       <%= if State.up_to_phase @state, "sent" do %>
         <%= submit "batch send disabled", disabled: "disabled", class: xc("btn-white", replace: [{"bg-white", "x-bg-lightgray"},{"x-hover-bg-lightblue", ""}]) %>
       <% else %>
-        <%= submit "send batch", data_confirm: "Are you sure?", class: xc("btn") %>
+        <%= submit "send batch", data_confirm: "Send #{@state.table.row_count} emails?", class: xc("btn") %>
       <% end %>
     </div>
     <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
