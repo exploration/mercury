@@ -10,9 +10,14 @@
       <%= link "➕", to: Routes.batch_index_path(@socket, :index), title: "add new batch", class: xc("link") %>
     </div>
   </div>
-  <div>
-    <%= link "👋 Log Out", to: Routes.page_path(@socket, :delete), title: "log out", class: xc("link") %>
-  </div>
+  <div class="flex">
+    <div class="mr2">
+      <%= link "❔", to: "https://public.3.basecamp.com/p/Ewid5rGiVrJDamErfXUXMF34", title: "help", target: "help", class: xc("link") %>
+    </div>
+    <div>
+      <%= link "👋 Log Out", to: Routes.page_path(@socket, :delete), title: "log out", class: xc("link") %>
+    </div>
+    </div>
 </header>
 <main role="main" class="pa2 ph4-ns pb4-ns">
   <p class="alert alert-info" role="alert"
