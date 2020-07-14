@@ -16,7 +16,7 @@ defmodule MercuryWeb.BatchLive.Index do
           {:ok, assign(socket, state: mount_state(session,batch))}
         %{"dupe" => id} ->
           batch = Mercury.Batch.get(id)
-          batch = %{batch | id: nil, send_report: []}
+          batch = %{batch | id: nil, inserted_at: nil, updated_at: nil, send_report: []}
           {:ok, assign(socket, state: mount_state(session,batch))}
         _ ->
           batch = %Batch{creator: session["account"]}
