@@ -224,6 +224,6 @@
     <%= content_tag :div, "Subject:", class: xc("label") <> " mt3" %>
     <div class="mt1"><%= report["subject"] %></div>
     <%= content_tag :div, "Body:", class: xc("label") <> " mt3" %>
-    <div class="mt1"><%= raw report["text_body"] %></div>
+    <pre class="mt1 x-tahoma"><%= raw report["text_body"] %></pre>
   </div>
 <% end %>
