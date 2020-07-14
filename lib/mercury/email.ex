@@ -19,7 +19,7 @@ defmodule Mercury.Email do
 
   @doc "Basic conversion of text to HTML, if there are no paragraph tags"
   def basic_html(text) do
-    if text =~ "<p" do
+    if text =~ ~r/(<p|<div)/i do
       text
     else
       String.replace text, "\n", "<br>"
