@@ -1,7 +1,7 @@
 <header role="header" class="flex justify-between pa2 ph4-ns pt4-ns">
   <div class="flex">
     <div class="mr2">
-      <%= img_tag @state.account.picture, alt: @state.account.name, title: @state.account.name, class: "br-100", width: 25, height: 25 %>
+      <%= img_tag @state.account.picture, alt: @state.account.name, title: @state.account.name, class: "br-100", width: 20, height: 20 %>
     </div>
     <div class="mr2">
       <%= link "📃", to: Routes.batch_path(@socket, :index), title: "view my batches", class: xc("link") %>
