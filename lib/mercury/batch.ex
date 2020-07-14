@@ -28,11 +28,13 @@ defmodule Mercury.Batch do
   List all sent batches
   """
   def list(opts \\ []) do
+    query = from b in Batch,
+      order_by: [desc: b.inserted_at]
     query = case Keyword.get(opts, :email) do
       nil ->
-        from b in Batch
+        from b in query
       email ->
-        from b in Batch,
+        from b in query,
         where: fragment("creator->>'email' = ?", ^email)
     end
     Repo.all(query)
