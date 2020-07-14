@@ -14,6 +14,11 @@ defmodule Mercury.Email do
       subject: State.merge(state, :subject),
       text_body: State.merge(state, :body)
     )
-    |> Bamboo.MandrillHelper.template("basic-email", [%{"name" => "main", "content" => State.merge(state, :body)}])
+    |> Bamboo.MandrillHelper.template("basic-email", [%{"name" => "main", "content" => basic_html(State.merge(state, :body))}])
+  end
+
+  @doc "Basic conversion of text to HTML"
+  def basic_html(text) do
+    String.replace text, "\n", "<br>"
   end
 end
