@@ -18,19 +18,14 @@ defmodule MercuryWeb.BatchLiveTest do
       assert html =~ account.name
     end
 
-    test "delivering emails", %{conn: conn} do
+    test "delivering emails" do
       state = batch_state()
-      {batch, changeset} = 
-        conn
-        |> assign(:state, state)
-        |> MercuryWeb.BatchLive.Index.send_emails()
-      assert Enum.count(Ecto.Changeset.get_change(changeset, :send_report)) == 3
-      Enum.each batch.send_report, fn report ->
+      Enum.with_index(state.table.rows)
+      |> Enum.each(fn {_row, index} ->
+        report = MercuryWeb.BatchLive.Index.send_email(state, index)
         assert report.status == ":delivered_email"
         assert_delivered_email report.bamboo_email
-      end
-
-      assert Enum.count(Mercury.Batch.list()) == 1
+      end)
     end
   end
 end

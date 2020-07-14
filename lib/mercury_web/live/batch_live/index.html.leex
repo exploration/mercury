@@ -162,19 +162,21 @@
       <%= State.merge(@state, :body) %>
     </pre>
   </div>
-  <%= if @state.updating do %>
-    <div class="mt4 x-red">Sending emails now, please wait...</div>
+  <%= if @state.update_message != "" do %>
+    <div class="mt4 pa3 f4 ba br2 bw2 x-b--aquablue x-bg-paleaquablue">
+      ⚠ <%= @state.update_message %>
+    </div>
   <% end %>
   <div class="mt4 flex-ns">
     <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
-      <%= if State.up_to_phase @state, "sent" do %>
+      <%= if State.up_to_phase(@state, "sent") || @state.update_message != "" do %>
         <%= submit "batch send disabled", disabled: "disabled", class: xc("btn-white", replace: [{"bg-white", "x-bg-lightgray"},{"x-hover-bg-lightblue", ""}]) %>
       <% else %>
         <%= submit "send batch", data_confirm: "Send #{@state.table.row_count} emails?", class: xc("btn") %>
       <% end %>
     </div>
     <div class="w-100 w-50-ns mt2 mt0-ns pr0 pr4-ns">
-      <%= if input_value(f, :from_name) && f.source.valid? do %>
+      <%= if input_value(f, :from_name) && f.source.valid? && @state.update_message == "" do %>
         <%= link "send this one", to: "#", "phx-click": "send_one_email", data_confirm: "Are you sure?", class: xc("btn-white") %>
       <% end %>
     </div>

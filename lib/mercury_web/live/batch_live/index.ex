@@ -67,13 +67,14 @@ defmodule MercuryWeb.BatchLive.Index do
   end
 
   def handle_event("send_batch", %{"batch" => params}, socket) do
+    state = socket.assigns.state
     changeset = 
-      Batch.change(socket.assigns.state.batch, params) 
+      Batch.change(state.batch, params) 
       |> Batch.validate()
     socket = 
       if changeset.valid? do
-        Process.send_after(self(), :send_emails, 1)
-        assign(socket, :state, %{socket.assigns.state | updating: true})
+        Process.send_after(self(), {:send_email, 0, []}, 1)
+        assign(socket, :state, %{state | update_message: "Sending email 1 of #{state.table.row_count}..."})
       else
         socket
       end
@@ -109,38 +110,30 @@ defmodule MercuryWeb.BatchLive.Index do
   end
 
   @impl true
-  def handle_info(:send_emails, socket) do
-    {batch, _changeset} = send_emails(socket)
-    {:noreply, push_redirect(socket, to: Routes.batch_index_path(socket, :index, batch.id))}
+  def handle_info({:send_email, index, report}, socket) do
+    state = socket.assigns.state
+    if index == state.table.row_count do
+      changeset = 
+        state.changeset
+        |> Ecto.Changeset.change(send_report: report)
+        |> Batch.validate()
+      {:ok, batch} = Mercury.Repo.insert(changeset)
+      {:noreply, push_redirect(socket, to: Routes.batch_index_path(socket, :index, batch.id))}
+    else
+      report = [send_email(state, index)] ++ report
+      Process.send_after(self(), {:send_email, index + 1, report}, 1)
+      message = if index + 1 == state.table.row_count do 
+        "" 
+      else 
+        "Sending email #{index + 2} of #{state.table.row_count}..."
+      end
+      {:noreply, assign(socket, :state, %{state | update_message: message})
+      }
+    end
   end
 
   @doc false
-  def send_emails(socket) do
-    state = socket.assigns.state
-    send_report = 
-      state.table.rows
-      |> Enum.with_index()
-      |> Enum.map(fn {_row, index} ->
-        send_email(state, index)
-      end)
-
-    changeset = 
-      state.changeset
-      |> Ecto.Changeset.change(send_report: send_report)
-      |> Batch.validate()
-
-    {:ok, batch} = Mercury.Repo.insert(changeset)
-
-    {batch, changeset}
-  end
-
-  defp mount_state(session, batch) do
-    changeset = Batch.change(batch, %{})
-    %State{account: session["account"], batch: batch, changeset: changeset, table: Table.from_tsv(batch.table_data)}
-    |> State.assign_phase()
-  end
-
-  defp send_email(state, index) do
+  def send_email(state, index) do
     case Mix.env do
       :test ->
         {_, {status, email}} = 
@@ -156,6 +149,13 @@ defmodule MercuryWeb.BatchLive.Index do
         end
         Report.new(email, status)
     end
+  end
+
+
+  defp mount_state(session, batch) do
+    changeset = Batch.change(batch, %{})
+    %State{account: session["account"], batch: batch, changeset: changeset, table: Table.from_tsv(batch.table_data), update_message: ""}
+    |> State.assign_phase()
   end
 
   defp update_table_data(socket, table_data) do

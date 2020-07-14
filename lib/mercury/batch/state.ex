@@ -19,7 +19,7 @@ defmodule Mercury.Batch.State do
     phase: "new",
     selected_row: 0,
     table: %Table{},
-    updating: false,
+    update_message: ""
   ]
   
   @field_regex ~r/{{([a-zA-Z0-9 -_]+)}}/
