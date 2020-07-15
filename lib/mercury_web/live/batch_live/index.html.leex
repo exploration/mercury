@@ -19,7 +19,7 @@
     <%= content_tag :div, "1. Raw spreadsheet data", class: xc("label") %>
     <%= link "👈 Edit Data", to: "#", class: xc("link"), phx_value_phase: "new", phx_click: "override_phase" %>
   </div>
-  <%= content_tag :div, "2. Your spreadsheet:", class: xc("label") <> " mt4" %>
+  <%= content_tag :div, "2. Your spreadsheet: (#{@state.table.row_count} rows)", class: xc("label") <> " mt4" %>
   <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
     <table class="w-100 mw9 table collapse">
       <thead>
@@ -37,7 +37,7 @@
               <%= if @state.selected_row == index do %>
                 👉
               <% else %>
-                <%= index %>
+                <%= index + 1%>
               <% end %>
             </td>
             <%= for field <- row.fields do %>
@@ -58,7 +58,7 @@
     </div>
     <div class="mt2-ns ph2">
       <span class="fw7">
-        Row <%= @state.selected_row %>:
+        Row <%= @state.selected_row + 1 %>:
       </span>
       <%= inspect Enum.at(@state.table.rows, @state.selected_row).fields %>
     </div>
@@ -184,7 +184,7 @@
 <% end %>
 
 <%= if State.up_to_phase @state, "sent" do %>
-  <%= content_tag :div, "4. Your send results:", class: xc("label") <> " mt4" %>
+  <%= content_tag :div, "4. Your send results: (#{Enum.count @state.batch.send_report} rows)", class: xc("label") <> " mt4" %>
   <div class="w-100 mw9 mt2 ba br1 x-b--blue h4 overflow-y-scroll f6" style="resize:both">
     <table class="w-100 mw9 table collapse">
       <thead>
@@ -205,7 +205,7 @@
               <%= if @state.selected_row == index do %>
                 👉
               <% else %>
-                <%= index %>
+                <%= index + 1 %>
               <% end %>
             </td>
             <td class="pa2 br x-b--blue <%= if report["status"] == "200" do "x-green fw7" else "x-red" end %>">
