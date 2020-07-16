@@ -158,7 +158,7 @@
         <%= error_tag f, :body %>
       </div>
     </div>
-    <pre class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns x-tahoma overflow-x-auto">
+    <pre class="w-100 w-50-ns mt2 mt4-ns pt0 pt1-ns pr0 pr4-ns x-tahoma" style="white-space: pre-wrap;">
       <%= State.merge(@state, :body) %>
     </pre>
   </div>
@@ -226,6 +226,6 @@
     <%= content_tag :div, "Subject:", class: xc("label") <> " mt3" %>
     <div class="mt1"><%= report["subject"] %></div>
     <%= content_tag :div, "Body:", class: xc("label") <> " mt3" %>
-    <pre class="mt1 x-tahoma"><%= raw report["text_body"] %></pre>
+    <pre class="mt1 x-tahoma" style="white-space: pre-wrap;"><%= raw report["text_body"] %></pre>
   </div>
 <% end %>
