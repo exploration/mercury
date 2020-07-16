@@ -21,8 +21,16 @@ defmodule Mercury.Email do
   def basic_html(text) do
     if text =~ ~r/(<p|<div)/i do
       text
+      |> filter_smart_quotes()
     else
-      String.replace text, "\n", "<br>"
+      String.replace(text, "\n", "<br>")
+      |> filter_smart_quotes()
     end
+  end
+
+  defp filter_smart_quotes(text) do
+    text
+    |> String.replace(~r/[\x{201C}\x{201D}\x{201E}\x{201F}\x{2033}\x{2036}]/u, "\"")
+    |> String.replace(~r/[\x{2018}\x{2019}\x{201A}\x{201B}\x{2032}\x{2035}]/u, "'")
   end
 end

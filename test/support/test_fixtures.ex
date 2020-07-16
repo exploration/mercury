@@ -66,7 +66,7 @@ defmodule Mercury.TestFixtures do
   Returns a valid %Mercury.Batch.Batch{}. `attrs` can be passed as a map.
   """
   def batch(attrs \\ %{}) do
-    Mercury.Batch.Batch.change(%Mercury.Batch.Batch{}, Map.merge(attrs, batch_attrs()))
+    Mercury.Batch.Batch.change(%Mercury.Batch.Batch{}, Map.merge(batch_attrs(), attrs))
     |> Ecto.Changeset.apply_changes()
   end
 

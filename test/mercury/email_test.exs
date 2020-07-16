@@ -13,6 +13,21 @@ defmodule Mercury.EmailTest do
         assert email.text_body =~ Table.get_field(state.table, index, "First Name")
       end)
     end
+
+    test "filtering HTML" do
+      problematic_html = """
+      <a href=”https://www.minecraft.net/en-us/download”>Minecraft Java site</a>
+
+      <b>cool</b>
+      """
+      improved_html = "<a href=\"https://www.minecraft.net/en-us/download\">Minecraft Java site</a><br><br><b>cool</b><br>"
+      batch_attrs = %{batch_attrs() | body: problematic_html}
+      batch = batch(batch_attrs)
+      changeset = Mercury.Batch.Batch.change(%Mercury.Batch.Batch{}, batch_attrs)
+      state = batch_state(%{batch: batch, changeset: changeset})
+      %{private: %{template_content: [%{"content" => content}]}} = Email.email(state)
+      assert content =~ improved_html
+    end
   end
 
 end
