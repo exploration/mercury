@@ -25,8 +25,9 @@ defmodule Mercury.EmailTest do
       batch = batch(batch_attrs)
       changeset = Mercury.Batch.Batch.change(%Mercury.Batch.Batch{}, batch_attrs)
       state = batch_state(%{batch: batch, changeset: changeset})
-      %{private: %{template_content: [%{"content" => content}]}} = Email.email(state)
-      assert content =~ improved_html
+      %{text_body: text_body, private: %{template_content: [%{"content" => content}]}} = Email.email(state)
+      assert content == improved_html
+      assert text_body == problematic_html
     end
   end
 
