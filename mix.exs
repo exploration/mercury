@@ -50,7 +50,7 @@ defmodule Mercury.MixProject do
 
       {:bamboo, "~> 1.5"},
       {:elixir_auth_google, "~> 1.1.0"},
-      {:ex_css_helper, git: "git@github.com:exploration/ex-css-helper.git"},
+      {:ex_css_helper, git: "https://github.com/exploration/ex-css-helper.git"},
     ]
   end
 
